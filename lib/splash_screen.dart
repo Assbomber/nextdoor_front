@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nextdoor_front/features/user/screens/login.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -6,8 +7,6 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: All user routing logic should be done here
-    return Container(
-      child: Text("Hi"),
-    );
+    return Login();
   }
 }
