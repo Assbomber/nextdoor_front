@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
 import 'package:nextdoor_front/constants/color_%20palette.dart';
+import 'package:nextdoor_front/features/user/screens/login_otp_verification.dart';
 import 'package:nextdoor_front/features/user/screens/login_page.dart';
 import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
+import 'package:nextdoor_front/services/api_service.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -23,6 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   bool passwordVisible = true;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +51,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: usernameController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: whiteColor,
+                  fillColor: textFieldColor,
                   hintText: "Username",
                   // hintStyle: h14InputTextHint,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                      borderSide:
+                          BorderSide(width: 0.50, color: textFieldBorder),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -69,11 +74,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: emailController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: whiteColor,
+                  fillColor: textFieldColor,
                   hintText: "Enter Your Email",
                   // hintStyle: h14InputTextHint,
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                      borderSide:
+                          BorderSide(width: 0.50, color: textFieldBorder),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -91,11 +98,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: passwordController,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: whiteColor,
+                  fillColor: textFieldColor,
                   hintText: "Password",
                   // hintStyle: h14InputTextHint,
                   border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                      borderSide:
+                          BorderSide(width: 0.50, color: textFieldBorder),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
                   suffixIcon: IconButton(
                     icon: Icon(passwordVisible
                         ? Icons.visibility
@@ -125,11 +134,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: confirmPasswordController,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: whiteColor,
+                  fillColor: textFieldColor,
                   hintText: "Confirm Password",
                   // hintStyle: h14InputTextHint,
                   border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
+                      borderSide:
+                          BorderSide(width: 0.50, color: textFieldBorder),
+                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
                   suffixIcon: IconButton(
                     icon: Icon(passwordVisible
                         ? Icons.visibility
@@ -153,17 +164,48 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(
                 height: 20,
               ),
-              CustomElevatedButton(
-                  width: 331,
-                  height: 56,
-                  title: 'Login',
-                  textColor: whiteColor,
-                  buttonBackground: blackColor,
-                  callback: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
-                      )),
+              isLoading
+                  ? Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : CustomElevatedButton(
+                      title: 'Register',
+                      textColor: whiteColor,
+                      buttonBackground: blackColor,
+                      callback: () async {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        print("In Register");
+                        var response = await ApiService()
+                            .emailVerification(emailController.text);
+                        if (response.statusCode == 201) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('OTP Sent Successfully')),
+                          );
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginOtpVerification(
+                                email: emailController.text,
+                                password: passwordController.text,
+                                username: usernameController.text,
+                              ),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                                content: Text('Something went wrong')),
+                          );
+                        }
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }),
             ],
           ),
         ),
@@ -174,7 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Already have an account?",
+              "Already have an account? ",
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,

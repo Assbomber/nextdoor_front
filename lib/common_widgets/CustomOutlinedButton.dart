@@ -4,15 +4,11 @@ import 'package:nextdoor_front/constants/color_%20palette.dart';
 class CustomOutlinedButton extends StatelessWidget {
   const CustomOutlinedButton({
     super.key,
-    required this.width,
-    required this.height,
     required this.title,
     required this.textColor,
     required this.buttonBackground,
     required this.callback,
   });
-  final double width;
-  final double height;
   final String title;
   final Color textColor;
   final Color buttonBackground;
@@ -22,8 +18,7 @@ class CustomOutlinedButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        padding:
-            const EdgeInsets.only(left: 150, right: 150, top: 15, bottom: 15),
+        minimumSize: const Size.fromHeight(50),
         backgroundColor: buttonBackground,
         elevation: 0,
         foregroundColor: textColor,
