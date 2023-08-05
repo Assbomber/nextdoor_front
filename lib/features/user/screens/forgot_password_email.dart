@@ -108,7 +108,6 @@ class _ForgotPasswordEmailState extends State<ForgotPasswordEmail> {
                             var response = await ApiService()
                                 .emailVerification(emailController.text);
                             if (response is Failure) {
-                              print('i am failed');
                               // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -116,8 +115,6 @@ class _ForgotPasswordEmailState extends State<ForgotPasswordEmail> {
                                         Text(response.exception.toString())),
                               );
                             } else {
-                              print('i am successs');
-
                               // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(content: Text(response.value)),
