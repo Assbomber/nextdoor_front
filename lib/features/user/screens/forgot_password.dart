@@ -2,33 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
 import 'package:nextdoor_front/constants/app_style.dart';
 import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/feed/screens/home.dart';
-import 'package:nextdoor_front/features/user/screens/Login_otp_verification.dart';
-import 'package:nextdoor_front/features/user/screens/forgot_password.dart';
-import 'package:nextdoor_front/features/user/screens/forgot_password_email.dart';
-import 'package:nextdoor_front/features/user/screens/register_page.dart';
+import 'package:nextdoor_front/features/user/screens/login.dart';
+import 'package:nextdoor_front/features/user/screens/login_page.dart';
 import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
 import 'package:nextdoor_front/services/api_service.dart';
 import 'package:nextdoor_front/utils/response_handler.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class ForgotPassword extends StatefulWidget {
+  const ForgotPassword({super.key, required this.email});
+
+  final String email;
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
-
+class _ForgotPasswordState extends State<ForgotPassword> {
   final _formKey = GlobalKey<FormState>();
-
-  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
+
   bool passwordVisible = true;
   bool isLoading = false;
 
@@ -43,52 +37,28 @@ class _LoginPageState extends State<LoginPage> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Text(
-                  'Welcome back! Glad to see you, Again!',
+                  'Create new password',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 20,
                 ),
-                TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: emailController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: textFieldColor,
-                    hintText: "Enter Your Email",
-                    hintStyle: AppStyle.txt15grey500,
-                    border: const OutlineInputBorder(
-                        borderSide:
-                            BorderSide(width: 0.50, color: textFieldBorder),
-                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                const Text(
+                  'Your new password must be unique from those previously used.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter email address';
-                    }
-                    const pattern =
-                        r"(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'"
-                        r'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-'
-                        r'\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*'
-                        r'[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4]'
-                        r'[0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9]'
-                        r'[0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\'
-                        r'x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])';
-                    final regex = RegExp(pattern);
-
-                    if (!regex.hasMatch(value)) {
-                      return 'Please enter a valid email address';
-                    }
-                    return null;
-                  },
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 40,
                 ),
                 TextFormField(
                   keyboardType: TextInputType.text,
@@ -97,8 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Enter Your Password",
-                    hintStyle: AppStyle.txt15grey500,
+                    hintText: "New Password",
                     // hintStyle: h14InputTextHint,
                     border: const OutlineInputBorder(
                         borderSide:
@@ -119,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter Your Password';
+                      return 'Please enter Your New Password';
                     }
                     if (value.length < 8) {
                       return 'Password must be at least 8 characters';
@@ -130,30 +99,79 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ForgotPasswordEmail()),
-                    );
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('Forgot Password'),
-                    ],
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  obscureText: passwordVisible,
+                  controller: confirmPasswordController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: textFieldColor,
+                    hintText: "Confirm Password",
+                    // hintStyle: h14InputTextHint,
+                    border: const OutlineInputBorder(
+                        borderSide:
+                            BorderSide(width: 0.50, color: textFieldBorder),
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                    suffixIcon: IconButton(
+                      icon: Icon(passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(
+                          () {
+                            passwordVisible = !passwordVisible;
+                          },
+                        );
+                      },
+                    ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter Your Comfirm Password';
+                    }
+                    if (passwordController.text !=
+                        confirmPasswordController.text) {
+                      return 'New Password and Confirm Password must be the same';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: otpController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: textFieldColor,
+                    hintText: "Enter Your OTP",
+                    hintStyle: AppStyle.txt15grey500,
+                    border: const OutlineInputBorder(
+                        borderSide:
+                            BorderSide(width: 0.50, color: textFieldBorder),
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter OTP';
+                    }
+
+                    if (value.length != 6) {
+                      return 'OTP must be 6 numbers';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(
                   height: 20,
                 ),
                 isLoading
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : CustomElevatedButton(
-                        title: 'Login',
+                        title: 'Reset Password',
                         textColor: whiteColor,
                         buttonBackground: blackColor,
                         callback: () async {
@@ -161,8 +179,10 @@ class _LoginPageState extends State<LoginPage> {
                             setState(() {
                               isLoading = true;
                             });
-                            var response = await ApiService().loginUser(
-                                emailController.text, passwordController.text);
+                            var response = await ApiService().resetUserPassword(
+                                widget.email,
+                                passwordController.text,
+                                int.parse(otpController.text));
                             if (response is Failure) {
                               // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -181,7 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Home()),
+                                    builder: (context) => const LoginPage()),
                               );
                             }
                             setState(() {
@@ -193,37 +213,6 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Don’t have an account? ",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegisterPage()),
-                );
-              },
-              child: const Text(
-                'Register Now',
-                style: TextStyle(
-                  color: Color(0xFF34C2C1),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

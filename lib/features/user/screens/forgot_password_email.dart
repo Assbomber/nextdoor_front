@@ -2,33 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
 import 'package:nextdoor_front/constants/app_style.dart';
 import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/feed/screens/home.dart';
-import 'package:nextdoor_front/features/user/screens/Login_otp_verification.dart';
 import 'package:nextdoor_front/features/user/screens/forgot_password.dart';
-import 'package:nextdoor_front/features/user/screens/forgot_password_email.dart';
-import 'package:nextdoor_front/features/user/screens/register_page.dart';
 import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
 import 'package:nextdoor_front/services/api_service.dart';
 import 'package:nextdoor_front/utils/response_handler.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class ForgotPasswordEmail extends StatefulWidget {
+  const ForgotPasswordEmail({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ForgotPasswordEmail> createState() => _ForgotPasswordEmailState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
-
+class _ForgotPasswordEmailState extends State<ForgotPasswordEmail> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+
   bool passwordVisible = true;
   bool isLoading = false;
 
@@ -43,15 +33,27 @@ class _LoginPageState extends State<LoginPage> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Text(
-                  'Welcome back! Glad to see you, Again!',
+                Text(
+                  'Forgot Password?',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Don't worry! It occurs. Please enter the email address linked with your account.",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
                   height: 40,
                 ),
                 TextFormField(
@@ -87,65 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     return null;
                   },
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  keyboardType: TextInputType.text,
-                  obscureText: passwordVisible,
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: textFieldColor,
-                    hintText: "Enter Your Password",
-                    hintStyle: AppStyle.txt15grey500,
-                    // hintStyle: h14InputTextHint,
-                    border: const OutlineInputBorder(
-                        borderSide:
-                            BorderSide(width: 0.50, color: textFieldBorder),
-                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                    suffixIcon: IconButton(
-                      icon: Icon(passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () {
-                        setState(
-                          () {
-                            passwordVisible = !passwordVisible;
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter Your Password';
-                    }
-                    if (value.length < 8) {
-                      return 'Password must be at least 8 characters';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ForgotPasswordEmail()),
-                    );
-                  },
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('Forgot Password'),
-                    ],
-                  ),
-                ),
-                const SizedBox(
+                SizedBox(
                   height: 20,
                 ),
                 isLoading
@@ -153,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: CircularProgressIndicator(),
                       )
                     : CustomElevatedButton(
-                        title: 'Login',
+                        title: 'Send Code',
                         textColor: whiteColor,
                         buttonBackground: blackColor,
                         callback: () async {
@@ -161,9 +105,10 @@ class _LoginPageState extends State<LoginPage> {
                             setState(() {
                               isLoading = true;
                             });
-                            var response = await ApiService().loginUser(
-                                emailController.text, passwordController.text);
+                            var response = await ApiService()
+                                .emailVerification(emailController.text);
                             if (response is Failure) {
+                              print('i am failed');
                               // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
@@ -171,19 +116,44 @@ class _LoginPageState extends State<LoginPage> {
                                         Text(response.exception.toString())),
                               );
                             } else {
+                              print('i am successs');
+
                               // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(response.value),
-                                ),
+                                SnackBar(content: Text(response.value)),
                               );
                               // ignore: use_build_context_synchronously
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Home()),
+                                    builder: (context) => ForgotPassword(
+                                        email: emailController.text)),
                               );
                             }
+
+                            // var response = await ApiService().loginUser(
+                            //     emailController.text, passwordController.text);
+                            // if (response is Failure) {
+                            //   // ignore: use_build_context_synchronously
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     SnackBar(
+                            //         content:
+                            //             Text(response.exception.toString())),
+                            //   );
+                            // } else {
+                            //   // ignore: use_build_context_synchronously
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     SnackBar(
+                            //       content: Text(response.value),
+                            //     ),
+                            //   );
+                            //   // ignore: use_build_context_synchronously
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => const Home()),
+                            //   );
+                            // }
                             setState(() {
                               isLoading = false;
                             });
@@ -193,37 +163,6 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        margin: const EdgeInsets.all(8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "Don’t have an account? ",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const RegisterPage()),
-                );
-              },
-              child: const Text(
-                'Register Now',
-                style: TextStyle(
-                  color: Color(0xFF34C2C1),
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

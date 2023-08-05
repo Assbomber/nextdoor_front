@@ -5,6 +5,7 @@ import 'package:nextdoor_front/features/user/screens/login_page.dart';
 import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
 import 'package:nextdoor_front/features/user/widgets/OtpInput.dart';
 import 'package:nextdoor_front/services/api_service.dart';
+import 'package:nextdoor_front/utils/response_handler.dart';
 
 class LoginOtpVerification extends StatefulWidget {
   const LoginOtpVerification({
@@ -22,6 +23,8 @@ class LoginOtpVerification extends StatefulWidget {
 }
 
 class _LoginOtpVerificationState extends State<LoginOtpVerification> {
+  final _formKey = GlobalKey<FormState>();
+
   // 4 text editing controllers that associate with the 4 input fields
   final TextEditingController _fieldOne = TextEditingController();
   final TextEditingController _fieldTwo = TextEditingController();
@@ -39,94 +42,112 @@ class _LoginOtpVerificationState extends State<LoginOtpVerification> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(22.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'OTP Verification',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w700,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'OTP Verification',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const Text(
-                'Enter the verification code we just sent on your email address.',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: forgotPasswordTextColor,
-                  fontWeight: FontWeight.w500,
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  OtpInput(_fieldOne, true), // auto focus
-                  OtpInput(_fieldTwo, false),
-                  OtpInput(_fieldThree, false),
-                  OtpInput(_fieldFour, false),
-                  OtpInput(_fieldFive, false),
-                  OtpInput(_fieldSix, false)
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : CustomElevatedButton(
-                      title: 'Verify',
-                      textColor: whiteColor,
-                      buttonBackground: blackColor,
-                      callback: () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        var otp = _fieldOne.text +
-                            _fieldTwo.text +
-                            _fieldThree.text +
-                            _fieldFour.text +
-                            _fieldFive.text +
-                            _fieldSix.text;
+                const Text(
+                  'Enter the verification code we just sent on your email address.',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: forgotPasswordTextColor,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    OtpInput(_fieldOne, true), // auto focus
+                    OtpInput(_fieldTwo, false),
+                    OtpInput(_fieldThree, false),
+                    OtpInput(_fieldFour, false),
+                    OtpInput(_fieldFive, false),
+                    OtpInput(_fieldSix, false)
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : CustomElevatedButton(
+                        title: 'Verify',
+                        textColor: whiteColor,
+                        buttonBackground: blackColor,
+                        callback: () async {
+                          if (_fieldOne.text.isNotEmpty &&
+                              _fieldTwo.text.isNotEmpty &&
+                              _fieldThree.text.isNotEmpty &&
+                              _fieldFour.text.isNotEmpty &&
+                              _fieldFive.text.isNotEmpty &&
+                              _fieldSix.text.isNotEmpty) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            var otp = _fieldOne.text +
+                                _fieldTwo.text +
+                                _fieldThree.text +
+                                _fieldFour.text +
+                                _fieldFive.text +
+                                _fieldSix.text;
 
-                        var response = await ApiService().registerUser(
-                            widget.email,
-                            widget.username,
-                            int.parse(otp),
-                            widget.password);
+                            var response = await ApiService().registerUser(
+                                widget.email,
+                                widget.username,
+                                int.parse(otp),
+                                widget.password);
 
-                        if (response.statusCode == 200) {
-                          // ignore: use_build_context_synchronously
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('User Registered Successfully'),
-                            ),
-                          );
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()),
-                          );
-                        } else {
-                          // ignore: use_build_context_synchronously
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Something went wrong')),
-                          );
-                        }
-                        setState(() {
-                          isLoading = false;
-                        });
-                      }),
-            ],
+                            if (response is Failure) {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content:
+                                        Text(response.exception.toString())),
+                              );
+                            } else {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(response.value),
+                                ),
+                              );
+                              // ignore: use_build_context_synchronously
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginPage()),
+                              );
+                            }
+                            setState(() {
+                              isLoading = false;
+                            });
+                          } else {
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Please enter otp'),
+                              ),
+                            );
+                          }
+                        }),
+              ],
+            ),
           ),
         ),
       ),
