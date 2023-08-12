@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 const API_ENDPOINT = 'myzone.up.railway.app';
 const LOGIN_API = 'api/auth/login';
 const REGISTER_USER = 'api/auth/register';

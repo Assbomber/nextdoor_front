@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
+import 'color.palette.dart';
 
 class AppStyle {
   static TextStyle txt15grey500 = const TextStyle(

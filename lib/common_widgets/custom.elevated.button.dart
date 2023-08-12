@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
 
 class CustomElevatedButton extends StatelessWidget {
   const CustomElevatedButton({

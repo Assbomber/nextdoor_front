@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:nextdoor_front/utils/response_handler.dart';
+import '../utils/response_handler.dart';
 import '../constants/constants.dart';
+import '../utils/utils.dart';
 
 class ApiService {
   Future emailVerification(String email) async {
@@ -29,10 +30,10 @@ class ApiService {
     try {
       var url = Uri.https(API_ENDPOINT, REGISTER_USER);
       Map data = {
-        "email": email,
-        "username": name,
-        "otp": otp,
-        "password": password
+        'email': email,
+        'username': name,
+        'otp': otp,
+        'password': password
       };
       // encode Map to JSON
       var body = json.encode(data);
@@ -53,7 +54,7 @@ class ApiService {
   Future loginUser(String email, String password) async {
     try {
       var url = Uri.https(API_ENDPOINT, LOGIN_API);
-      Map data = {"email": email, "password": password};
+      Map data = {'email': email, 'password': password};
       // encode Map to JSON
       var body = json.encode(data);
       var response = await http.post(url, body: body);
@@ -61,6 +62,8 @@ class ApiService {
       switch (response.statusCode) {
         case 201:
           final data = json.decode(response.body);
+          String getToken = data['data']['token'];
+          await storeToken('token', getToken);
           return Success(data['message']);
         default:
           final data = json.decode(response.body);
@@ -74,7 +77,7 @@ class ApiService {
   Future resetUserPassword(String email, String password, int otp) async {
     try {
       var url = Uri.https(API_ENDPOINT, RESET_PASSWORD);
-      Map data = {"email": email, "password": password, "otp": otp};
+      Map data = {'email': email, 'password': password, 'otp': otp};
       // encode Map to JSON
       var body = json.encode(data);
       var response = await http.post(url, body: body);

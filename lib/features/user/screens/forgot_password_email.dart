@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
-import 'package:nextdoor_front/constants/app_style.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/user/screens/forgot_password.dart';
-import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
-import 'package:nextdoor_front/services/api_service.dart';
-import 'package:nextdoor_front/utils/response_handler.dart';
+import '../../../common_widgets/custom.elevated.button.dart';
+import '../../../constants/app_style.dart';
+import '../../../constants/color.palette.dart';
+import 'forgot_password.dart';
+import '../../../services/api_service.dart';
+import '../../../utils/response_handler.dart';
+
+import '../widgets/login.app.bar.dart';
 
 class ForgotPasswordEmail extends StatefulWidget {
   const ForgotPasswordEmail({super.key});
@@ -36,24 +37,24 @@ class _ForgotPasswordEmailState extends State<ForgotPasswordEmail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Forgot Password?',
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Text(
+                const Text(
                   "Don't worry! It occurs. Please enter the email address linked with your account.",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 TextFormField(
@@ -62,7 +63,7 @@ class _ForgotPasswordEmailState extends State<ForgotPasswordEmail> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Enter Your Email",
+                    hintText: 'Enter Your Email',
                     hintStyle: AppStyle.txt15grey500,
                     border: const OutlineInputBorder(
                         borderSide:
@@ -89,11 +90,11 @@ class _ForgotPasswordEmailState extends State<ForgotPasswordEmail> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 isLoading
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : CustomElevatedButton(

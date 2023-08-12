@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
-import 'package:nextdoor_front/constants/app_style.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/user/screens/login.dart';
-import 'package:nextdoor_front/features/user/screens/login_page.dart';
-import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
-import 'package:nextdoor_front/services/api_service.dart';
-import 'package:nextdoor_front/utils/response_handler.dart';
+import '../../../common_widgets/custom.elevated.button.dart';
+import '../../../constants/app_style.dart';
+import '../../../constants/color.palette.dart';
+import 'login_page.dart';
+import '../widgets/login.app.bar.dart';
+import '../../../services/api_service.dart';
+import '../../../utils/response_handler.dart';
 
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key, required this.email});
@@ -67,7 +66,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "New Password",
+                    hintText: 'New Password',
                     // hintStyle: h14InputTextHint,
                     border: const OutlineInputBorder(
                         borderSide:
@@ -106,7 +105,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Confirm Password",
+                    hintText: 'Confirm Password',
                     // hintStyle: h14InputTextHint,
                     border: const OutlineInputBorder(
                         borderSide:
@@ -145,7 +144,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Enter Your OTP",
+                    hintText: 'Enter Your OTP',
                     hintStyle: AppStyle.txt15grey500,
                     border: const OutlineInputBorder(
                         borderSide:
