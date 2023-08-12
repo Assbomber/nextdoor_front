@@ -259,6 +259,17 @@ class _UserFirstimeDetailState extends State<UserFirstimeDetail> {
                 ),
               ),
               Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      const HSLColor.fromAHSL(1, 212, 0.35, 0.58).toColor(),
+                      const HSLColor.fromAHSL(1, 218, 0.32, 0.80).toColor(),
+                    ],
+                  ),
+                ),
                 margin: const EdgeInsets.only(top: 20),
                 child: CustomElevatedButton(
                     title: 'Save',
