@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
-import 'package:nextdoor_front/constants/app_style.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/feed/screens/home.dart';
-import 'package:nextdoor_front/features/user/screens/Login_otp_verification.dart';
-import 'package:nextdoor_front/features/user/screens/forgot_password.dart';
-import 'package:nextdoor_front/features/user/screens/forgot_password_email.dart';
-import 'package:nextdoor_front/features/user/screens/register_page.dart';
-import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
-import 'package:nextdoor_front/services/api_service.dart';
-import 'package:nextdoor_front/utils/response_handler.dart';
+import '../../../common_widgets/custom.elevated.button.dart';
+import '../../../constants/app_style.dart';
+import '../../../constants/color.palette.dart';
+import '../../feed/screens/home.dart';
+import 'forgot_password_email.dart';
+import 'register_page.dart';
+import '../widgets/login.app.bar.dart';
+import '../../../services/api_service.dart';
+import '../../../utils/response_handler.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +17,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
@@ -60,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Enter Your Email",
+                    hintText: 'Enter Your Email',
                     hintStyle: AppStyle.txt15grey500,
                     border: const OutlineInputBorder(
                         borderSide:
@@ -97,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Enter Your Password",
+                    hintText: 'Enter Your Password',
                     hintStyle: AppStyle.txt15grey500,
                     // hintStyle: h14InputTextHint,
                     border: const OutlineInputBorder(
@@ -149,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 20,
                 ),
                 isLoading
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : CustomElevatedButton(
@@ -157,27 +156,26 @@ class _LoginPageState extends State<LoginPage> {
                         textColor: whiteColor,
                         buttonBackground: blackColor,
                         callback: () async {
-                          if (_formKey.currentState!.validate()) {
+                          if (_formKey.currentState!.validate() &&
+                              context.mounted) {
                             setState(() {
                               isLoading = true;
                             });
                             var response = await ApiService().loginUser(
                                 emailController.text, passwordController.text);
-                            if (response is Failure) {
-                              // ignore: use_build_context_synchronously
+                            if (response is Failure && context.mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                     content:
                                         Text(response.exception.toString())),
                               );
                             } else {
-                              // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(response.value),
+                                  content: Text(response),
                                 ),
                               );
-                              // ignore: use_build_context_synchronously
+
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -201,7 +199,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Don’t have an account? ",
+              'Don’t have an account? ',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,

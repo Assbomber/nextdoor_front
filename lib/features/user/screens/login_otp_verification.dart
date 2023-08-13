@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/user/screens/login_page.dart';
-import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
-import 'package:nextdoor_front/features/user/widgets/OtpInput.dart';
-import 'package:nextdoor_front/services/api_service.dart';
-import 'package:nextdoor_front/utils/response_handler.dart';
+
+import '../../../common_widgets/custom.elevated.button.dart';
+import '../../../constants/color.palette.dart';
+import '../../../services/api_service.dart';
+import '../../../utils/response_handler.dart';
+import '../widgets/login.app.bar.dart';
+import '../widgets/otp.input.dart';
+import 'login_page.dart';
 
 class LoginOtpVerification extends StatefulWidget {
   const LoginOtpVerification({
@@ -41,7 +42,7 @@ class _LoginOtpVerificationState extends State<LoginOtpVerification> {
       appBar: const LoginAppbar(),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(22.0),
+          padding: const EdgeInsets.all(22.0),
           child: Form(
             key: _formKey,
             child: Column(
@@ -83,7 +84,7 @@ class _LoginOtpVerificationState extends State<LoginOtpVerification> {
                   height: 30,
                 ),
                 isLoading
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : CustomElevatedButton(
@@ -157,16 +158,14 @@ class _LoginOtpVerificationState extends State<LoginOtpVerification> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Didn’t received code? ",
+              'Didn’t received code? ',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,
               ),
             ),
             InkWell(
-              onTap: () {
-                print('Text Clicked');
-              },
+              onTap: () {},
               child: const Text(
                 'Resend',
                 style: TextStyle(

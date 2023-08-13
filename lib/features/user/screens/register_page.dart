@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/user/screens/login.dart';
-import 'package:nextdoor_front/features/user/screens/login_otp_verification.dart';
-import 'package:nextdoor_front/features/user/screens/login_page.dart';
-import 'package:nextdoor_front/features/user/widgets/LoginAppbar.dart';
-import 'package:nextdoor_front/services/api_service.dart';
-import 'package:nextdoor_front/utils/response_handler.dart';
+import '../../../common_widgets/custom.elevated.button.dart';
+import '../../../constants/color.palette.dart';
+import 'login.dart';
+import 'login_otp_verification.dart';
+import '../widgets/login.app.bar.dart';
+import '../../../services/api_service.dart';
+import '../../../utils/response_handler.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,6 +15,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
@@ -58,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: const InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Username",
+                    hintText: 'Username',
                     // hintStyle: h14InputTextHint,
                     border: OutlineInputBorder(
                         borderSide:
@@ -72,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 TextFormField(
@@ -81,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: const InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Enter Your Email",
+                    hintText: 'Enter Your Email',
                     // hintStyle: h14InputTextHint,
                     border: OutlineInputBorder(
                         borderSide:
@@ -118,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Password",
+                    hintText: 'Password',
                     // hintStyle: h14InputTextHint,
                     border: const OutlineInputBorder(
                         borderSide:
@@ -157,7 +157,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: textFieldColor,
-                    hintText: "Confirm Password",
+                    hintText: 'Confirm Password',
                     // hintStyle: h14InputTextHint,
                     border: const OutlineInputBorder(
                         borderSide:
@@ -191,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 20,
                 ),
                 isLoading
-                    ? Center(
+                    ? const Center(
                         child: CircularProgressIndicator(),
                       )
                     : CustomElevatedButton(
@@ -245,7 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Already have an account? ",
+              'Already have an account? ',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:nextdoor_front/common_widgets/CustomElevatedButton.dart';
-import 'package:nextdoor_front/common_widgets/CustomOutlinedButton.dart';
-import 'package:nextdoor_front/constants/color_%20palette.dart';
-import 'package:nextdoor_front/features/user/screens/login_page.dart';
-import 'package:nextdoor_front/features/user/screens/register_page.dart';
+import '../../../common_widgets/custom.elevated.button.dart';
+import '../../../common_widgets/custom.outline.button.dart';
+import '../../../constants/color.palette.dart';
+import 'login_page.dart';
+import 'register_page.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
